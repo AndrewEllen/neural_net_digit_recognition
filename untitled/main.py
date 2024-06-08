@@ -12,21 +12,30 @@ def train_model():
 
     # Flatten means you're flattening the input shape, in this case it's a 28x28 pixel image.
     # Flatten turns it into a flat layer instead of a grid of 28x28 pixels. So one big line of 784 pixels.
-    model.add(tf.keras.layers.Flatten(input_shape=(28, 28)))
+    # model.add(tf.keras.layers.Flatten(input_shape(28,28)))
+    # The one in "(28, 28, 1)" is required or else it'll error out
+    model.add(tf.keras.layers.Conv2D(32, (3,3), activation='sigmoid', input_shape=(28, 28, 1)))
+
+    model.add(tf.keras.layers.MaxPool2D((2, 2)))
+    model.add(tf.keras.layers.Conv2D(48, (3,3), activation='sigmoid'))
+    model.add(tf.keras.layers.MaxPool2D((2, 2)))
+    model.add(tf.keras.layers.Dropout(0.5))
+    model.add(tf.keras.layers.Flatten())
 
     # A dense layer is the most basic layer. In a dense layer each neuron is connected to each other neuron of the other layer.
     # relu is rectified linear unit
     # softmax is essentially the confidence value for the output which is the probability of the digit being the right number.
-    model.add(tf.keras.layers.Dense(128, activation='relu'))
-    model.add(tf.keras.layers.Dense(128, activation='relu'))
+    model.add(tf.keras.layers.Dense(512, activation='sigmoid'))
+    model.add(tf.keras.layers.Dense(512, activation='sigmoid'))
     # ten is the number of neurons. Only 10 are needed as there are only ten digits
-    model.add(tf.keras.layers.Dense(10, activation='softmax'))
+    #model.add(tf.keras.layers.Dense(10, activation='softmax'))
+    model.add(tf.keras.layers.Dense(10, activation='sigmoid'))
 
     # Compiling the model
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     # Fitting the model (training it). Epochs are how many times it runs the training
-    model.fit(x_training_data, y_training_data, epochs=3)
+    model.fit(x_training_data, y_training_data, epochs=500)
 
     # Saving the model
     model.save('handwritten_number_recognition_model.keras')
