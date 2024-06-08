@@ -62,6 +62,7 @@ def run_model():
             # Looping onto the next number
             image_number += 1
 
+
 if __name__ == "__main__":
     # Setting up global variables for training data and the model
 
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     global x_training_data, y_training_data, x_test_data, y_test_data
     (x_training_data, y_training_data), (x_test_data, y_test_data) = mnist.load_data()
 
-    # Normalizing the training and test data
+    # Normalizing the training and test data.
     x_training_data = tf.keras.utils.normalize(x_training_data, axis=1)
     x_test_data = tf.keras.utils.normalize(x_test_data, axis=1)
 
