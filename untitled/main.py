@@ -1,11 +1,13 @@
 import os
+
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 import tensorflow as tf
 
-def train_model():
 
+def train_model():
     model = tf.keras.models.Sequential()
 
     # Flatten means you're flattening the input shape, in this case it's a 28x28 pixel image.
@@ -17,6 +19,7 @@ def train_model():
     # softmax is essentially the confidence value for the output which is the probability of the digit being the right number.
     model.add(tf.keras.layers.Dense(128, activation='relu'))
     model.add(tf.keras.layers.Dense(128, activation='relu'))
+    # ten is the number of neurons. Only 10 are needed as there are only ten digits
     model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
     # Compiling the model
@@ -28,12 +31,36 @@ def train_model():
     # Saving the model
     model.save('handwritten_number_recognition_model.keras')
 
-def run_model():
+
+def test_model():
     loss, accuracy = model.evaluate(x_test_data, y_test_data)
 
     print(loss)
     print(accuracy)
 
+
+def run_model():
+    image_number = 1
+    while os.path.isfile(f"test_data/digit{image_number}.png"):
+        try:
+            # Taking last channel of the png. Only need the shape data no pixel colour data needed.
+            img = cv2.imread(f"test_data/digit{image_number}.png")[:, :, 0]
+            img = np.invert(np.array([img]))
+            prediction = model.predict(img)
+            # argmax gives the neuron with the highest activation
+            print(f"The digit is {np.argmax(prediction)}")
+
+            # Setting tkinter to be used for plot display. Without this it wasn't working for me
+            matplotlib.use('TkAgg')
+            plt.imshow(img[0], cmap=plt.cm.binary)
+            plt.show()
+
+        except Exception as exception:
+            print("An Error occurred")
+            print(exception)
+        finally:
+            # Looping onto the next number
+            image_number += 1
 
 if __name__ == "__main__":
     # Setting up global variables for training data and the model
