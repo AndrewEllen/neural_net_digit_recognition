@@ -35,4 +35,4 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 model.fit(x_training_data, y_training_data, epochs=3)
 
 # Saving the model
-model.save('handwritten_number_recognition_model')
+model.save('handwritten_number_recognition_model.keras')
