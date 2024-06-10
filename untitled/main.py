@@ -67,27 +67,27 @@ def run_model():
 
 
 if __name__ == "__main__":
+    tf.config.set_visible_devices([], 'GPU')
     print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-    print(tf.test.is_built_with_cuda())
-    if tf.test.is_built_with_cuda():
-        # Setting up global variables for training data and the model
+    print("CUDA: ", tf.test.is_built_with_cuda())
+    # Setting up global variables for training data and the model
 
-        # The MNIST labelled dataset for handwritten numbers
-        global mnist
-        mnist = tf.keras.datasets.mnist
+    # The MNIST labelled dataset for handwritten numbers
+    global mnist
+    mnist = tf.keras.datasets.mnist
 
-        # x_training_data is the image data. y_training_data is the labelled data.
-        # x_test_data is the test image data. y_test_data is the test labelled data.
-        global x_training_data, y_training_data, x_test_data, y_test_data
-        (x_training_data, y_training_data), (x_test_data, y_test_data) = mnist.load_data()
+    # x_training_data is the image data. y_training_data is the labelled data.
+    # x_test_data is the test image data. y_test_data is the test labelled data.
+    global x_training_data, y_training_data, x_test_data, y_test_data
+    (x_training_data, y_training_data), (x_test_data, y_test_data) = mnist.load_data()
 
-        # Normalizing the training and test data.
-        x_training_data = tf.keras.utils.normalize(x_training_data, axis=1)
-        x_test_data = tf.keras.utils.normalize(x_test_data, axis=1)
+    # Normalizing the training and test data.
+    x_training_data = tf.keras.utils.normalize(x_training_data, axis=1)
+    x_test_data = tf.keras.utils.normalize(x_test_data, axis=1)
 
-        # If model doesn't exist then train it
-        if not os.path.isfile('handwritten_number_recognition_model.keras'):
-            train_model()
-        global model
-        model = tf.keras.models.load_model('handwritten_number_recognition_model.keras')
-        run_model()
+    # If model doesn't exist then train it
+    if not os.path.isfile('handwritten_number_recognition_model.keras'):
+        train_model()
+    global model
+    model = tf.keras.models.load_model('handwritten_number_recognition_model.keras')
+    run_model()
